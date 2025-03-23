@@ -37,13 +37,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")  // Only ADMIN can access
+                        .requestMatchers("/user/**").hasRole("USER")   // Only USER can access
                         .anyRequest().authenticated()
                 )
-                .oauth2Login()
+                .httpBasic()
                 .and()
-                .httpBasic();
+                .csrf().disable(); // Disable CSRF for simplicity (enable in production)
         return http.build();
     }
 }
-
